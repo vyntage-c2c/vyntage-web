@@ -3,7 +3,7 @@ export default function Home() {
     <main className="min-h-screen">
       <section className="mx-auto max-w-6xl px-6 py-24">
         <h1 className="text-5xl font-bold">
-          Welcome to Vintage
+          Welcome to Vyntage
         </h1>
 
         <p className="mt-6 text-lg text-gray-600">
