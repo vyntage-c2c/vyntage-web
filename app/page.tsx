@@ -185,19 +185,23 @@ function Marquee() {
 // ─── Navbar ──────────────────────────────────────────────────────────────────
 function Navbar() {
   const scrolled = useScrolled();
+  const [menuOpen, setMenuOpen] = useState(false);
+
   return (
     <motion.nav
       initial={{ y: -72, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.7, ease: EASE }}
       className={`fixed top-0 inset-x-0 z-50 transition-all duration-300 ${
-        scrolled ? "bg-white/95 backdrop-blur-md shadow-sm" : "bg-transparent"
+        scrolled || menuOpen ? "bg-white/95 backdrop-blur-md shadow-sm" : "bg-transparent"
       }`}
     >
       <div className="mx-auto max-w-6xl px-6 h-16 flex items-center justify-between">
         <a href="#" className="font-bold text-xl tracking-tight" style={{ color: P }}>
           Vyntage
         </a>
+
+        {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-6">
           <div className="flex items-center gap-8 text-sm font-medium text-gray-500">
             <a href="#about"        className="hover:text-gray-900 transition-colors">About</a>
@@ -214,7 +218,67 @@ function Navbar() {
             Join Waitlist
           </motion.a>
         </div>
+
+        {/* Mobile hamburger */}
+        <button
+          className="md:hidden flex flex-col justify-center gap-[5px] w-9 h-9"
+          onClick={() => setMenuOpen((o) => !o)}
+          aria-label="Toggle menu"
+        >
+          <span
+            className="block h-[2px] w-6 rounded-full transition-all duration-300 origin-center mx-auto"
+            style={{
+              backgroundColor: P,
+              transform: menuOpen ? "rotate(45deg) translateY(7px)" : "none",
+            }}
+          />
+          <span
+            className="block h-[2px] w-6 rounded-full transition-all duration-300 mx-auto"
+            style={{ backgroundColor: P, opacity: menuOpen ? 0 : 1 }}
+          />
+          <span
+            className="block h-[2px] w-6 rounded-full transition-all duration-300 origin-center mx-auto"
+            style={{
+              backgroundColor: P,
+              transform: menuOpen ? "rotate(-45deg) translateY(-7px)" : "none",
+            }}
+          />
+        </button>
       </div>
+
+      {/* Mobile dropdown menu */}
+      <motion.div
+        initial={false}
+        animate={menuOpen ? { height: "auto", opacity: 1 } : { height: 0, opacity: 0 }}
+        transition={{ duration: 0.25, ease: EASE }}
+        className="md:hidden overflow-hidden bg-white border-t"
+        style={{ borderColor: PB }}
+      >
+        <div className="px-6 py-5 flex flex-col gap-4">
+          {[
+            { href: "#about",        label: "About" },
+            { href: "#how-it-works", label: "How It Works" },
+            { href: "#impact",       label: "Our Impact" },
+          ].map(({ href, label }) => (
+            <a
+              key={href}
+              href={href}
+              onClick={() => setMenuOpen(false)}
+              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors py-1"
+            >
+              {label}
+            </a>
+          ))}
+          <a
+            href="#waitlist"
+            onClick={() => setMenuOpen(false)}
+            className="rounded-full px-5 py-3 text-sm font-semibold text-white text-center mt-1"
+            style={{ backgroundColor: P }}
+          >
+            Join Waitlist
+          </a>
+        </div>
+      </motion.div>
     </motion.nav>
   );
 }
@@ -222,7 +286,7 @@ function Navbar() {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 function Hero() {
   return (
-    <section className="relative min-h-screen flex items-center overflow-hidden bg-white">
+    <section className="relative min-h-screen overflow-hidden bg-white">
 
       <motion.div
         animate={{ y: [0, -28, 0] }}
@@ -596,7 +660,7 @@ function CopyEmail() {
 function Footer() {
   return (
     <footer className="border-t py-10" style={{ borderColor: PB }}>
-      <div className="mx-auto max-w-6xl px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-sm">
+      <div className="mx-auto max-w-6xl px-6 flex flex-col md:flex-row items-center justify-between gap-6 text-sm text-center md:text-left">
         <div>
           <p className="font-bold text-lg" style={{ color: P }}>Vyntage</p>
           <p className="text-gray-400 mt-0.5">Better tomorrow, cleaner earth.</p>
