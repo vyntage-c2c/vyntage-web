@@ -288,7 +288,7 @@ function Navbar() {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 function Hero() {
   return (
-    <section className="relative md:min-h-screen overflow-hidden bg-white">
+    <section className="relative overflow-hidden bg-white">
 
       <motion.div
         animate={{ y: [0, -28, 0] }}
@@ -309,7 +309,7 @@ function Hero() {
         style={{ background: `radial-gradient(circle, ${P}0d, transparent 65%)`, filter: "blur(60px)", willChange: "transform" }}
       />
 
-      <div className="mx-auto max-w-6xl px-6 pt-28 pb-20 relative z-10 w-full">
+      <div className="mx-auto max-w-6xl px-6 pt-28 pb-20 md:pt-36 md:pb-32 relative z-10 w-full">
         <motion.div initial="hidden" animate="visible" variants={stagger}>
 
           <motion.div variants={fadeUp}>
