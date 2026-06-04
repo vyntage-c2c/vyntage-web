@@ -482,15 +482,35 @@ function Impact() {
 
 // ─── Waitlist ─────────────────────────────────────────────────────────────────
 function Waitlist() {
-  const [email, setEmail] = useState("");
+  const [email, setEmail]       = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading]   = useState(false);
+  const [error, setError]       = useState("");
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    try {
+      const res = await fetch("/api/notify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      if (!res.ok) throw new Error("failed");
+      setSubmitted(true);
+    } catch {
+      setError("Something went wrong — please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <section id="waitlist" className="py-24 bg-white">
       <div className="mx-auto max-w-2xl px-6 text-center">
         <InView>
 
-          {/* Word-by-word reveal heading */}
           <AnimatedHeading
             text="Be the first to know"
             className="font-heading text-4xl md:text-5xl font-bold text-gray-900"
@@ -500,11 +520,7 @@ function Waitlist() {
             Vyntage is launching soon in India. Drop your email and get early access when we go live.
           </motion.p>
 
-          <motion.form
-            variants={fadeUp}
-            onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
-            className="mt-10"
-          >
+          <motion.form variants={fadeUp} onSubmit={handleSubmit} className="mt-10">
             {submitted ? (
               <motion.div
                 initial={{ scale: 0.92, opacity: 0 }}
@@ -516,28 +532,35 @@ function Waitlist() {
                 🎉 You're on the list! We'll be in touch.
               </motion.div>
             ) : (
-              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-                <input
-                  type="email"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="your@email.com"
-                  className="flex-1 rounded-full px-6 py-4 border text-sm outline-none transition-all"
-                  style={{ borderColor: PB }}
-                  onFocus={(e) => (e.currentTarget.style.borderColor = P)}
-                  onBlur={(e)  => (e.currentTarget.style.borderColor = PB)}
-                />
-                <motion.button
-                  type="submit"
-                  whileHover={{ scale: 1.04 }}
-                  whileTap={{ scale: 0.96 }}
-                  className="rounded-full px-7 py-4 text-sm font-semibold text-white whitespace-nowrap"
-                  style={{ backgroundColor: P }}
-                >
-                  Notify Me
-                </motion.button>
-              </div>
+              <>
+                <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                  <input
+                    type="email"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="your@email.com"
+                    disabled={loading}
+                    className="flex-1 rounded-full px-6 py-4 border text-sm outline-none transition-all disabled:opacity-50"
+                    style={{ borderColor: PB }}
+                    onFocus={(e) => (e.currentTarget.style.borderColor = P)}
+                    onBlur={(e)  => (e.currentTarget.style.borderColor = PB)}
+                  />
+                  <motion.button
+                    type="submit"
+                    disabled={loading}
+                    whileHover={loading ? {} : { scale: 1.04 }}
+                    whileTap={loading ? {} : { scale: 0.96 }}
+                    className="rounded-full px-7 py-4 text-sm font-semibold text-white whitespace-nowrap disabled:opacity-60"
+                    style={{ backgroundColor: P }}
+                  >
+                    {loading ? "Saving…" : "Notify Me"}
+                  </motion.button>
+                </div>
+                {error && (
+                  <p className="mt-3 text-sm text-red-500">{error}</p>
+                )}
+              </>
             )}
           </motion.form>
 
