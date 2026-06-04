@@ -229,7 +229,7 @@ function Navbar() {
             className="block h-[2px] w-6 rounded-full transition-all duration-300 origin-center mx-auto"
             style={{
               backgroundColor: P,
-              transform: menuOpen ? "rotate(45deg) translateY(7px)" : "none",
+              transform: menuOpen ? "translateY(7px) rotate(45deg)" : "none",
             }}
           />
           <span
@@ -240,7 +240,7 @@ function Navbar() {
             className="block h-[2px] w-6 rounded-full transition-all duration-300 origin-center mx-auto"
             style={{
               backgroundColor: P,
-              transform: menuOpen ? "rotate(-45deg) translateY(-7px)" : "none",
+              transform: menuOpen ? "translateY(-7px) rotate(-45deg)" : "none",
             }}
           />
         </button>
@@ -256,27 +256,29 @@ function Navbar() {
       >
         <div className="px-6 py-5 flex flex-col gap-4">
           {[
-            { href: "#about",        label: "About" },
-            { href: "#how-it-works", label: "How It Works" },
-            { href: "#impact",       label: "Our Impact" },
-          ].map(({ href, label }) => (
-            <a
-              key={href}
-              href={href}
-              onClick={() => setMenuOpen(false)}
-              className="text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors py-1"
+            { id: "about",        label: "About" },
+            { id: "how-it-works", label: "How It Works" },
+            { id: "impact",       label: "Our Impact" },
+            { id: "waitlist",     label: "Join Waitlist", primary: true },
+          ].map(({ id, label, primary }) => (
+            <button
+              key={id}
+              onClick={() => {
+                setMenuOpen(false);
+                setTimeout(() => {
+                  document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+                }, 300);
+              }}
+              className={
+                primary
+                  ? "rounded-full px-5 py-3 text-sm font-semibold text-white text-center mt-1"
+                  : "text-left text-sm font-medium text-gray-600 hover:text-gray-900 transition-colors py-1"
+              }
+              style={primary ? { backgroundColor: P } : {}}
             >
               {label}
-            </a>
+            </button>
           ))}
-          <a
-            href="#waitlist"
-            onClick={() => setMenuOpen(false)}
-            className="rounded-full px-5 py-3 text-sm font-semibold text-white text-center mt-1"
-            style={{ backgroundColor: P }}
-          >
-            Join Waitlist
-          </a>
         </div>
       </motion.div>
     </motion.nav>
@@ -286,7 +288,7 @@ function Navbar() {
 // ─── Hero ─────────────────────────────────────────────────────────────────────
 function Hero() {
   return (
-    <section className="relative min-h-screen overflow-hidden bg-white">
+    <section className="relative md:min-h-screen overflow-hidden bg-white">
 
       <motion.div
         animate={{ y: [0, -28, 0] }}
