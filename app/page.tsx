@@ -125,7 +125,7 @@ const dirVariant: Record<Direction, Variants> = {
   right: fadeRight,
 };
 
-function AnimatedStat({ value, label, direction = "up" }: { value: string; label: string; direction?: Direction }) {
+function AnimatedStat({ value, label, source, direction = "up" }: { value: string; label: string; source?: string; direction?: Direction }) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true });
   const motionVal = useMotionValue(0);
@@ -155,6 +155,9 @@ function AnimatedStat({ value, label, direction = "up" }: { value: string; label
     >
       <div className="text-5xl font-extrabold text-white tracking-tight">{display}</div>
       <p className="mt-4 text-green-100 text-sm leading-relaxed">{label}</p>
+      {source && (
+        <p className="mt-4 text-[0.65rem] leading-snug text-green-100/50">{source}</p>
+      )}
     </motion.div>
   );
 }
@@ -501,16 +504,18 @@ function HowItWorks() {
 
 // ─── Impact stats ─────────────────────────────────────────────────────────────
 function Impact() {
-  const stats: { value: string; label: string; direction: Direction }[] = [
+  const stats: { value: string; label: string; source?: string; direction: Direction }[] = [
     {
-      value: "65 Million",
+      value: "~40 Million Tonnes",
       direction: "left",
-      label: "Tonnes of consumer & household waste generated in India every year — from discarded electronics to outgrown baby gear.",
+      label: "Of consumer & household waste generated in India every year — from discarded electronics to outgrown baby gear.",
+      source: "Source: Ministry of Statistics (MoSPI), EnviStats India Report. Total MSW of 62–65 million tonnes per CPCB; household share approximately 62% per MoSPI.",
     },
     {
-      value: "₹4 Lakh Crore",
+      value: "~₹78,000 Crore",
       direction: "up",
-      label: "Of dead capital sitting frozen in closets, shelves, and storage rooms across urban Indian homes.",
+      label: "Of dead capital sitting frozen in closets, shelves, and storage rooms across Indian homes — and that number keeps growing.",
+      source: "Source: OLX CRUST (Consumer Research on Used-Goods and Selling Trends) Survey, Edition 3 (2015–16), conducted by IMRB International. Reported by Economic Times Retail.",
     },
     {
       value: "< 2 min",
@@ -537,7 +542,7 @@ function Impact() {
 
           <div className="grid md:grid-cols-3 gap-6">
             {stats.map((stat, i) => (
-              <AnimatedStat key={i} value={stat.value} label={stat.label} direction={stat.direction} />
+              <AnimatedStat key={i} value={stat.value} label={stat.label} source={stat.source} direction={stat.direction} />
             ))}
           </div>
         </InView>
